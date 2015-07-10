@@ -2,13 +2,16 @@ web:
   restart: always
   build: ./web
   expose:
-    - "8000"
+    - "5000"
+    - "9090"
+    - "9091"
   links:
     - postgres:postgres
   volumes:
-    - /usr/src/app/static
+    - /usr/src/app
   env_file: .env
-  command: /usr/local/bin/gunicorn -w 2 -b :8000 app:app
+  command: uwsgi --http :5000 --wsgi-file app.py --callable app --processes 2 --threads 4
+  #command: python app.py
 
 nginx:
   restart: always
@@ -22,17 +25,17 @@ nginx:
   links:
     - web:web
 
-data:
-  restart: always
-  image: postgres:latest
-  volumes:
-    - /var/lib/postgresql
-  command: true
+#data:
+#  restart: always
+#  image: postgres:latest
+#  volumes:
+#    - /var/lib/postgresql
+#  command: true
 
 postgres:
   restart: always
   image: postgres:latest
-  volumes_from:
-    - data
+  volumes:
+    - /var/lib/postgresql:data
   ports:
     - "5432:5432"
