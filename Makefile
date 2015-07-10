@@ -14,14 +14,16 @@ rm:
 build:
 	docker-compose build
 
-
 kill: 
 	docker-compose kill
 
 restart: 
 	docker-compose restart
 
-tests:
+tests-nginx:
+	docker exec -ti vagrant_nginx_1 curl localhost
+
+tests: tests-nginx
 	docker exec -ti vagrant_web_1 curl localhost:5000
 
 show-example:
