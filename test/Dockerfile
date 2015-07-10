@@ -1,1 +1,0 @@
-FROM kdelfour/supervisor-docker
